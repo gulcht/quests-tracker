@@ -12,5 +12,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  quest-tracker-api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: quest-tracker-api
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      STAGE: Local
+      SERVER_PORT: 3000
+      SERVER_BODY_LIMIT: 10
+      SERVER_TIMEOUT: 30
+      DATABASE_URL: postgresql://postgres:123456@postgres:5432/quests_tracker_db
+      JWT_ADVENTURER_SECRET: your-secret
+      JWT_ADVENTURER_REFRESH_SECRET: your-refresh-secret
+      JWT_GUILD_COMMANDER_SECRET: your-secret
+      JWT_GUILD_COMMANDER_REFRESH_SECRET: your-refresh-secret
+
 volumes:
   pgdata:
