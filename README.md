@@ -87,3 +87,11 @@ The project uses a GitHub Actions workflow (`.github/workflows/main.yml`) execut
 - **Building:** Compiles the production binary with `cargo build --release`.
 - **Dockerizing:** Builds the production Docker image and pushes it to **GitHub Container Registry (GHCR)**:
   - Repository Image: `ghcr.io/<owner>/quests-tracker:latest` and tagged with the commit SHA.
+
+---
+
+## 💡 Credits & Acknowledgements
+
+This project was developed for educational purposes to learn Backend development with Rust, based on the original repository:
+- **Original Repository:** [Rayato159/quests-tracker](https://github.com/Rayato159/quests-tracker)
+
