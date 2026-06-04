@@ -14,21 +14,20 @@ pub async fn adventurers_authorization(
     mut req: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
-    if let Some(cookie_header) = req.headers().get(header::COOKIE) {
-        if let Ok(cookie_str) = cookie_header.to_str() {
-            let access_token = get_cookie_value(cookie_str, "act");
+    let adventurer_id = req
+        .headers()
+        .get(header::COOKIE)
+        .and_then(|cookie_header| cookie_header.to_str().ok())
+        .and_then(|cookie_str| get_cookie_value(cookie_str, "act"))
+        .and_then(|token| {
+            let secret_env = get_adventurer_secret_env().ok()?;
+            let claims = jwt_authentication::verify_token(secret_env.secret, token).ok()?;
+            claims.sub.parse::<i32>().ok()
+        });
 
-            if let Some(token) = access_token {
-                if let Ok(secret_env) = get_adventurer_secret_env() {
-                    if let Ok(claims) = jwt_authentication::verify_token(secret_env.secret, token) {
-                        if let Ok(adventurer_id) = claims.sub.parse::<i32>() {
-                            req.extensions_mut().insert(adventurer_id);
-                            return Ok(next.run(req).await);
-                        }
-                    }
-                }
-            }
-        }
+    if let Some(adventurer_id) = adventurer_id {
+        req.extensions_mut().insert(adventurer_id);
+        return Ok(next.run(req).await);
     }
     Err(StatusCode::UNAUTHORIZED)
 }
@@ -37,21 +36,20 @@ pub async fn guild_commanders_authorization(
     mut req: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
-    if let Some(cookie_header) = req.headers().get(header::COOKIE) {
-        if let Ok(cookie_str) = cookie_header.to_str() {
-            let access_token = get_cookie_value(cookie_str, "act");
+    let guild_commander_id = req
+        .headers()
+        .get(header::COOKIE)
+        .and_then(|cookie_header| cookie_header.to_str().ok())
+        .and_then(|cookie_str| get_cookie_value(cookie_str, "act"))
+        .and_then(|token| {
+            let secret_env = get_guild_commanders_secret_env().ok()?;
+            let claims = jwt_authentication::verify_token(secret_env.secret, token).ok()?;
+            claims.sub.parse::<i32>().ok()
+        });
 
-            if let Some(token) = access_token {
-                if let Ok(secret_env) = get_guild_commanders_secret_env() {
-                    if let Ok(claims) = jwt_authentication::verify_token(secret_env.secret, token) {
-                        if let Ok(guild_commander_id) = claims.sub.parse::<i32>() {
-                            req.extensions_mut().insert(guild_commander_id);
-                            return Ok(next.run(req).await);
-                        }
-                    }
-                }
-            }
-        }
+    if let Some(guild_commander_id) = guild_commander_id {
+        req.extensions_mut().insert(guild_commander_id);
+        return Ok(next.run(req).await);
     }
     Err(StatusCode::UNAUTHORIZED)
 }

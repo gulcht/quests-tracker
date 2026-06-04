@@ -60,7 +60,7 @@ where
 
         let conditions_to_update = quest.status == QuestStatuses::InJourney.to_string();
 
-        println!("{}", quest.status.to_string());
+        println!("{}", quest.status);
         if !conditions_to_update {
             return Err(anyhow::anyhow!("Invalid condition to change status"));
         }
