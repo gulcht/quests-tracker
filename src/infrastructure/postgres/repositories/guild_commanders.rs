@@ -19,7 +19,6 @@ pub struct GuildCommanderPostgres {
 impl GuildCommanderPostgres {
     pub fn new(db_pool: Arc<PgPoolSquad>) -> Self {
         Self { db_pool }
-        
     }
 }
 

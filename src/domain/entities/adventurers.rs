@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
 use diesel::{
-    prelude::{Identifiable, Insertable, Queryable},
     Selectable,
+    prelude::{Identifiable, Insertable, Queryable},
 };
 
 use crate::infrastructure::postgres::schema::adventurers;
